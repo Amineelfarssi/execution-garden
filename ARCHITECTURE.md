@@ -1,9 +1,10 @@
 # Execution Garden: Enterprise LLM Gateway Architecture for Banking
 
-> **Version:** 1.0.0  
+> **Version:** 2.0.0  
 > **Date:** October 27, 2025  
-> **Status:** Draft  
-> **Authors:** Architecture Team
+> **Status:** Refined Draft  
+> **Authors:** Architecture Team  
+> **Last Updated:** October 27, 2025
 
 Banking organizations require **centralized AI governance without sacrificing business unit agility**. After analyzing self-hosted LLM gateway solutions, AWS multi-account patterns, and banking compliance requirements, the optimal architecture combines LiteLLM on AWS ECS with a serverless-first approach that scales strategically to containers only when justified. This design delivers **60% lower TCO than custom builds** while maintaining full data sovereignty, meets strict regulatory requirements, and provides a clear **16-week path to production**.
 
@@ -25,7 +26,7 @@ The serverless architecture provides the fastest path to production while mainta
 
 Lambda functions assume roles into the Operations Account for Bedrock access, implementing the "memoryless operations account" pattern where customer prompts and responses never persist in the centralized account. CloudWatch Logs remain in business unit accounts for data isolation, with CloudTrail providing centralized audit trails. This architecture achieves **<100ms API Gateway latency plus 500ms-2s Bedrock inference time**.
 
-**Justification for starting serverless**: Your constraint requires justifying ECS/EKS, and Lambda + API Gateway deliver production-ready LLM routing without containers. Cold starts affect <1% of invocations and add only 200-500ms when they occur—acceptable for most banking workflows. No idle costs, automatic scaling to 1000 concurrent executions per second, and straightforward compliance audits make this the optimal starting point.
+**Justification for starting serverless**: Your constraint requires justifying ECS/EKS, and Lambda + API Gateway deliver production-ready LLM routing without containers. Cold starts affect <1% of invocations and add only 200-500ms when they occurâ€”acceptable for most banking workflows. No idle costs, automatic scaling to 1000 concurrent executions per second, and straightforward compliance audits make this the optimal starting point.
 
 **Observability pattern**: Deploy OpenTelemetry instrumentation in Lambda functions to capture LLM-specific traces. Use AWS CloudWatch for metrics and CloudWatch Logs Insights for structured query analysis. OpenTelemetry semantic conventions for GenAI (now part of official OpenTelemetry spec as of 2025) standardize how you capture gen_ai.request.model, gen_ai.usage.input_tokens, gen_ai.usage.output_tokens, and gen_ai.system attributes across all LLM calls. Export traces to Grafana-compatible backends using OpenTelemetry Collector.
 
@@ -41,7 +42,7 @@ Add ECS Fargate running LiteLLM Gateway as your multi-provider orchestration lay
 
 **This is the ECS/EKS justification**: Containers become necessary when Lambda's 15-minute timeout, lack of persistent connections, and limited complex dependency management restrict multi-provider orchestration. LiteLLM requires stateful caching, sophisticated retry logic with circuit breakers, and complex routing decisions that benefit from long-running processes. ECS Fargate eliminates container management overhead while providing the runtime environment LiteLLM requires.
 
-The architecture maintains your Phase 1 serverless layer for simple Bedrock-only requests (80% of traffic) while routing complex multi-provider requests through LiteLLM. This **hybrid pattern optimizes costs**—serverless for simple routing, containers only where justified.
+The architecture maintains your Phase 1 serverless layer for simple Bedrock-only requests (80% of traffic) while routing complex multi-provider requests through LiteLLM. This **hybrid pattern optimizes costs**â€”serverless for simple routing, containers only where justified.
 
 **LiteLLM deployment specifics**: Deploy official Docker image (litellm/litellm:main-stable) on ECS Fargate with 2 vCPU, 4GB RAM per task. Configure 3+ tasks across multiple AZs with auto-scaling based on CPU/memory. Use AWS Systems Manager Parameter Store for API keys with encryption. Configure IAM roles for ECS tasks to access Bedrock via AssumeRole pattern. Enable CloudWatch Container Insights for detailed metrics.
 
@@ -53,7 +54,7 @@ The architecture maintains your Phase 1 serverless layer for simple Bedrock-only
 
 **When to deploy**: Only when business requirements demand proprietary fine-tuned models not available via Bedrock or other providers. **Triggers include** needing models with specialized banking domain knowledge, data residency requirements preventing API calls to external providers, cost optimization for extremely high volumes (>50M requests/month), or compliance mandates for model hosting.
 
-Deploy self-hosted models on Amazon SageMaker Real-Time Inference endpoints or (if you need cost optimization at scale) EKS with GPU node groups. SageMaker provides managed infrastructure with one-click deployment, automatic scaling, and built-in monitoring—ideal for 1-10 models. EKS becomes cost-effective at scale (>100 models) with fractional GPU sharing and 30-45% cost savings reported by enterprises like Informatica and Vannevar Labs.
+Deploy self-hosted models on Amazon SageMaker Real-Time Inference endpoints or (if you need cost optimization at scale) EKS with GPU node groups. SageMaker provides managed infrastructure with one-click deployment, automatic scaling, and built-in monitoringâ€”ideal for 1-10 models. EKS becomes cost-effective at scale (>100 models) with fractional GPU sharing and 30-45% cost savings reported by enterprises like Informatica and Vannevar Labs.
 
 **EKS justification for self-hosted models**: GPU workloads benefit dramatically from fractional GPU sharing and time-slicing available in EKS but not in SageMaker. EKS with Karpenter enables 30-60 second node provisioning for scale-out, sophisticated GPU scheduling with tools like vLLM and TensorRT-LLM, and unified platform for ML and non-ML workloads. For banks running 10+ custom models, **EKS reduces inference costs by 30-45%** versus SageMaker while providing greater control.
 
@@ -70,14 +71,14 @@ LiteLLM orchestrates requests to these self-hosted endpoints alongside external 
 | **Monthly infrastructure cost** | $165 | $1,070 | $1,070 + $1,000-$10,000 |
 | **Operational complexity** | Low (managed services) | Medium (container management) | High (GPU + container ops) |
 | **Latency (P99)** | <1s routing + Bedrock | <1.2s routing + provider | <500ms routing + inference |
-| **Supports 200-500 req/s** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Multi-provider** | ❌ No (Bedrock only) | ✅ Yes (100+ providers) | ✅ Yes (unlimited) |
-| **Cost tracking per app** | ⚠️ Via API keys | ✅ Native in LiteLLM | ✅ Native in LiteLLM |
-| **Automatic fallback** | ❌ No | ✅ Yes | ✅ Yes |
-| **Prompt caching** | ⚠️ Bedrock only | ✅ Cross-provider | ✅ Cross-provider |
-| **Model lifecycle mgmt** | ⚠️ Manual | ✅ Automated routing | ✅ Automated routing |
-| **Compliance readiness** | ✅ Full | ✅ Full | ✅ Full |
-| **Justifies containers?** | ❌ No | ✅ Yes (orchestration) | ✅ Yes (GPU access) |
+| **Supports 200-500 req/s** | âœ… Yes | âœ… Yes | âœ… Yes |
+| **Multi-provider** | âŒ No (Bedrock only) | âœ… Yes (100+ providers) | âœ… Yes (unlimited) |
+| **Cost tracking per app** | âš ï¸ Via API keys | âœ… Native in LiteLLM | âœ… Native in LiteLLM |
+| **Automatic fallback** | âŒ No | âœ… Yes | âœ… Yes |
+| **Prompt caching** | âš ï¸ Bedrock only | âœ… Cross-provider | âœ… Cross-provider |
+| **Model lifecycle mgmt** | âš ï¸ Manual | âœ… Automated routing | âœ… Automated routing |
+| **Compliance readiness** | âœ… Full | âœ… Full | âœ… Full |
+| **Justifies containers?** | âŒ No | âœ… Yes (orchestration) | âœ… Yes (GPU access) |
 
 **Decision framework**: Start with Phase 1 for all initial deployments. Add Phase 2 when any of these conditions trigger: (1) business units require models not on Bedrock, (2) need cost optimization across providers, (3) require automatic failover, (4) sophisticated routing based on cost or latency becomes essential. Add Phase 3 only when business case justifies GPU costs and operational complexity.
 
