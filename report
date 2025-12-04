@@ -1,0 +1,87 @@
+AI-Agent for Banking Products: Implementation Roadmap
+
+1.0 Strategic Context and Project Mandate
+
+This document outlines the strategic roadmap for the phased implementation of the AI-Agent for Banking Products. Its purpose is to provide project stakeholders with a clear, chronological plan detailing the journey from a controlled pilot to full operational integration. The roadmap is designed to ensure a deliberate, value-driven rollout that maximizes benefits while mitigating risks.
+
+The core business problem this initiative addresses is the manual, resource-intensive process of handling customer inquiries related to variable-rate mortgages. Currently, the organization manually resolves over 120 cases each month originating from the DVM (digitale vraagmodule - "digital questions module"). This manual workflow consumes significant specialist time and introduces operational risk, presenting a clear opportunity for intelligent automation to enhance efficiency and consistency.
+
+The AI-Agent is designed to achieve three primary goals, each delivering distinct strategic value:
+
+* Prefill Draft Answers: The agent will generate and prefill draft responses directly within the One (CRM) system. This empowers colleagues by providing a high-quality starting point, significantly reducing the time required to formulate and send customer communications.
+* Facilitate Customer Self-Service: The agent will be capable of making simulations for customers or intelligently referring them to the existing simulation tool in the Mobile application. This promotes self-service, improves the customer experience, and deflects simple inquiries from the service queue.
+* Manage Complex Handovers: For requests that require human intervention, the agent will manage a seamless handover to a human colleague for tasks requiring intervention, such as registrations or creating a task for a specialist in KBC Live or a branch. This ensures complex cases are routed correctly without manual triage.
+
+This roadmap begins with the pilot phase, a foundational step that has already validated the core concept and provided critical insights for the full-scale implementation that follows.
+
+2.0 Pilot Phase: Validation and Key Learnings
+
+The pilot phase was a critical first step designed to de-risk the project by testing the agent's capabilities in a controlled environment. This approach allowed the team to gather real-world performance data, validate the technical architecture, and refine the agent's knowledge base with minimal impact on the operational team.
+
+The pilot's operational workflow was facilitated through a Streamlit application. This involved a "Human API" process where colleagues manually copy-pasted client questions from the CRM into the application. The agent would then analyze the case, reason through the required steps, and generate a draft answer. A human expert was essential to this loop, validating each response as either OK (acceptable) or NOK (not acceptable). Critically, all validated cases were saved to a dedicated test bench, forming a golden test set that is now used for ongoing quality assurance and iterative improvement.
+
+Initial performance metrics from 87 labeled cases demonstrated the agent's strong potential and highlighted key areas for refinement.
+
+Label	First Turn Performance (54 cases)	Full Scope Performance (87 cases)
+OK	78%	70%
+MEH	15%	13%
+NOK	7%	17%
+
+* OK: The generated answer required no changes, or the correct action (e.g., handover) was selected.
+* MEH: The draft answer required minor changes but still resulted in significant time savings for the colleague.
+* NOK: The response provided limited or no time savings, or the agent selected the wrong action.
+
+The data shows slightly higher performance on initial interactions, with a modest drop when handling more complex, multi-turn conversations, validating the need for further refinement. The pilot also identified several common issues that will be addressed in subsequent phases:
+
+* Incomplete Documentation: The agent occasionally failed when required information or specific instructions were not present in its knowledge base.
+* Incorrect Input Data: Performance was impacted by incorrect or incomplete data being fed into the system.
+* Handling Follow-up Questions: Complex, multi-turn conversations could sometimes confuse the agent.
+
+The outcomes and learnings from this successful pilot have directly informed the structured, three-phase implementation plan designed to carry the project to full production.
+
+3.0 Phased Implementation Roadmap
+
+This three-phase implementation roadmap provides a clear path for a progressive rollout. The plan is designed to move the AI-Agent from a limited user pilot to full system integration, ensuring stability, continuous improvement, and smooth business adoption along the way.
+
+3.1 Phase 1: Pilot Release and Foundational Capabilities (Target: 17/11/2025)
+
+This initial phase begins with the release of the pilot application to a focused group of nine test users on November 17, 2025. The primary focus is on refining the agent's performance in a live environment and establishing the operational groundwork for long-term success.
+
+The strategic objectives for this phase are:
+
+1. Drive Iterative Improvements: By using actual production data from the test users, the project team will continuously refine the agent's supporting documentation and prompts. This live feedback loop is the most effective way to improve the agent's accuracy and utility.
+2. Facilitate Business Adaptation and Define AgentOps: This controlled release provides the business unit with a crucial adaptation period for a new, agent-assisted way of working. It also creates a practical forum for co-designing the critical AgentOps processes for maintaining, updating, and governing the agent.
+3. Build a Robust Test Bench: Leveraging the labeling studio, the team will continue to build out the test bench of validated cases. This will enable the development of automated evaluations, creating a strong foundation for quality assurance and preventing performance regressions in future releases.
+
+3.2 Phase 2: Initial Integration and Automation (Target: February 2026)
+
+Targeting the February 2026 release, this phase marks the first major step towards technical automation by integrating the AI-Agent with the organization's MPPs for TMK.
+
+The core objective is to replace the "human API" for the TMK integration. This initial integration is a crucial milestone, as it removes the manual bottleneck of copy-pasting information from the CRM into the agent's interface. Achieving this will create a more resilient, scalable, and automated workflow, freeing up colleague time and reducing the potential for manual error.
+
+3.3 Phase 3: Full CRM Integration and Scope Expansion (Target: May 2026 - August 2026)
+
+The final implementation phase begins with the May 2026 release and culminates in the final delivery of the AI-Agent within the One (CRM) system by August 2026. This phase transitions the agent from a standalone tool to a fully embedded component of the core business workflow.
+
+The strategic objectives for this phase are:
+
+1. Achieve Full System Integration: This objective completes the replacement of the "human API" by fully embedding the AI-Agent within the CRM-One environment. Colleagues will interact with the agent seamlessly within their primary workspace, maximizing adoption and efficiency.
+2. Extend Agent Scope: With the core architecture and operational processes firmly established, the project will expand the agent's capabilities to support other parts of the DVM. This leverages the initial investment to solve a broader set of business challenges, demonstrating the scalability of the platform.
+
+This roadmap provides the tactical plan for implementation, but its long-term success will be secured by adhering to the strategic principles learned during the project's early stages.
+
+4.0 Strategic Considerations and Future Outlook
+
+Achieving the long-term vision for this AI-Agent requires looking beyond the technical implementation. The project's enduring success will depend on the adoption of key strategic principles and a proactive approach to solving the operational challenges inherent in managing intelligent systems.
+
+Based on the initial development and pilot, several critical lessons have emerged to guide future work:
+
+* The Crucial Role of the Feedback Loop: Current AI agents cannot "learn on the job" in the same way a human can. A continuous human-in-the-loop feedback process is the single most important factor for refining the agent and transferring deep institutional knowledge from experienced colleagues into the system's documentation.
+* Keep it simple and sane: The approach is to start with a single, solvable question, validate the solution, and then expand to the next challenge. This avoids premature optimization and the trap of chasing abstract metrics; a bad metric is worse than no metric at all.
+* Autonomous-First Approach: The agent is designed for autonomy wherever possible, using workflows to steer behavior only when necessary. By investing in high-quality documentation and prompts, the system is architected to maximally leverage future improvements in LLM technology, operating on the principle that today's models are the least capable they will ever be.
+* Business-Oriented Focus: Success depends on deep collaboration with the business. The project methodology emphasizes capturing feedback early, iterating quickly, and maintaining a relentless focus on solving the core business problem.
+* Take end-to-end ownership: The technical team must deeply understand the business process, think beyond a narrow development role, and perform their own sanity checks. This ensures the solution being built is not just technically sound but genuinely effective in its operational context.
+
+The primary challenge ahead is the establishment of a mature AgentOps practice. This is the set of processes and responsibilities governing the agent's lifecycle in production, and it raises critical questions that must be addressed: Who updates the prompt? How do we test that updates don't break the agent? How can we quickly update the agent when new regulations trigger new types of questions? Formalizing AgentOps is the most important non-technical challenge to solve for sustainable success.
+
+The future outlook for this initiative is highly promising. The AI-Agent for Banking Products is not just a solution to a single problem; it is a pathfinder project. The tools, processes, and "execution garden" established here will create a reusable blueprint that will significantly accelerate the time-to-market for future AI agents across the organization. While this blueprint will dramatically shorten the AI development cycle, the project acknowledges that deep IT integrations will likely remain the primary pacing item for future deployments, underscoring the need for continued cross-functional collaboration.
